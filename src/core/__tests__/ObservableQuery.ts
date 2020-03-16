@@ -1234,7 +1234,6 @@ describe('ObservableQuery', () => {
               data: {},
               loading: true,
               networkStatus: NetworkStatus.loading,
-              stale: false,
             });
           } else if (handleCount === 2) {
             expect(result).toEqual({
@@ -1243,7 +1242,6 @@ describe('ObservableQuery', () => {
               },
               loading: true,
               networkStatus: NetworkStatus.loading,
-              stale: false,
             });
           } else if (handleCount === 3) {
             expect(result).toEqual({
@@ -1253,7 +1251,6 @@ describe('ObservableQuery', () => {
               },
               loading: false,
               networkStatus: NetworkStatus.ready,
-              stale: false,
             });
 
             // Make the next network request fail.
@@ -1280,7 +1277,6 @@ describe('ObservableQuery', () => {
               },
               loading: true,
               networkStatus: NetworkStatus.refetch,
-              stale: false,
             });
           } else if (handleCount === 5) {
             expect(result).toEqual({
@@ -1290,7 +1286,6 @@ describe('ObservableQuery', () => {
               },
               loading: true,
               networkStatus: NetworkStatus.refetch,
-              stale: false,
             });
 
             resolve();
@@ -1400,7 +1395,6 @@ describe('ObservableQuery', () => {
             data,
             loading,
             networkStatus,
-            stale: false,
           });
         } catch (e) {
           reject(e);
@@ -1430,7 +1424,6 @@ describe('ObservableQuery', () => {
           data: dataOne,
           loading: false,
           networkStatus: 7,
-          stale: false,
           partial: false,
         });
         resolve();
@@ -1440,7 +1433,6 @@ describe('ObservableQuery', () => {
         loading: true,
         data: undefined,
         networkStatus: 1,
-        stale: false,
         partial: true,
       });
 
@@ -1450,7 +1442,6 @@ describe('ObservableQuery', () => {
             loading: true,
             data: undefined,
             networkStatus: 1,
-            stale: false,
             partial: true,
           });
         }),
@@ -1469,7 +1460,6 @@ describe('ObservableQuery', () => {
           data: dataOne,
           loading: false,
           networkStatus: 7,
-          stale: false,
         });
         const observable = queryManager.watchQuery({
           query,
@@ -1479,7 +1469,6 @@ describe('ObservableQuery', () => {
           data: dataOne,
           loading: true,
           networkStatus: NetworkStatus.loading,
-          stale: false,
           partial: false,
         });
       }).then(resolve, reject);
@@ -1614,7 +1603,6 @@ describe('ObservableQuery', () => {
           data: dataOne,
           loading: true,
           networkStatus: 1,
-          stale: false,
           partial: true,
         });
 
@@ -1625,7 +1613,6 @@ describe('ObservableQuery', () => {
             data,
             loading,
             networkStatus,
-            stale: false,
           });
 
           if (handleCount === 1) {
@@ -1633,7 +1620,6 @@ describe('ObservableQuery', () => {
               data: dataOne,
               loading: true,
               networkStatus: 1,
-              stale: false,
             });
 
           } else if (handleCount === 2) {
@@ -1641,7 +1627,6 @@ describe('ObservableQuery', () => {
               data: superDataOne,
               loading: false,
               networkStatus: 7,
-              stale: false,
             });
             resolve();
           }
@@ -1672,7 +1657,6 @@ describe('ObservableQuery', () => {
           data: undefined,
           loading: true,
           networkStatus: 1,
-          stale: false,
           partial: false,
         });
 
@@ -1688,7 +1672,6 @@ describe('ObservableQuery', () => {
               data,
               loading,
               networkStatus,
-              stale: false,
               partial: false,
             });
           } else if (handleCount === 2) {
@@ -1696,7 +1679,6 @@ describe('ObservableQuery', () => {
               data: dataTwo,
               loading: false,
               networkStatus: 7,
-              stale: false,
             });
             resolve();
           }
@@ -1727,7 +1709,6 @@ describe('ObservableQuery', () => {
           data: undefined,
           loading: true,
           networkStatus: 1,
-          stale: false,
           partial: false,
         });
 
@@ -1743,7 +1724,6 @@ describe('ObservableQuery', () => {
               data,
               loading,
               networkStatus,
-              stale: false,
               partial: false,
             });
           } else if (handleCount === 2) {
@@ -1751,7 +1731,6 @@ describe('ObservableQuery', () => {
               data: dataTwo,
               loading: false,
               networkStatus: 7,
-              stale: false,
             });
             resolve();
           }
@@ -1810,7 +1789,6 @@ describe('ObservableQuery', () => {
             data,
             loading,
             networkStatus,
-            stale: false,
           });
 
           if (count === 1) {
@@ -1818,7 +1796,6 @@ describe('ObservableQuery', () => {
               data: dataOne,
               loading: false,
               networkStatus: 7,
-              stale: false,
             });
             queryManager.mutate({
               mutation,
