@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import { InMemoryCache } from "../inMemoryCache";
 import { Policies } from "../policies";
 import { Reference, StoreObject } from "../../../core";
+import { MissingFieldError } from "../..";
 
 function reverse(s: string) {
   return s.split("").reverse().join("");
@@ -995,6 +996,15 @@ describe("type policies", function () {
 
       expect(cache.extract()).toEqual(snapshot1);
 
+      function makeMissingError(jobNumber: number) {
+        return new MissingFieldError(
+          `Can't find field 'result' on Job:{"name":"Job #${jobNumber}"} object`,
+          ["jobs", jobNumber - 1, "result"],
+          expect.anything(),
+          expect.anything(),
+        );
+      }
+
       expect(cache.diff({
         query,
         optimistic: false,
@@ -1013,6 +1023,11 @@ describe("type policies", function () {
           }],
         },
         complete: false,
+        missing: [
+          makeMissingError(1),
+          makeMissingError(2),
+          makeMissingError(3),
+        ],
       });
 
       function setResult(jobNum: number) {
@@ -1058,6 +1073,10 @@ describe("type policies", function () {
           }],
         },
         complete: false,
+        missing: [
+          makeMissingError(1),
+          makeMissingError(3),
+        ],
       });
 
       cache.writeQuery({
@@ -1111,6 +1130,10 @@ describe("type policies", function () {
           }],
         },
         complete: false,
+        missing: [
+          makeMissingError(1),
+          makeMissingError(3),
+        ],
       });
 
       setResult(1);
