@@ -1,4 +1,6 @@
 import { print } from 'graphql/language/printer';
+import { getOperationAST } from 'graphql';
+
 import stringify from 'fast-json-stable-stringify';
 import { equal } from '@wry/equality';
 
@@ -15,6 +17,9 @@ import {
   removeConnectionDirectiveFromDocument,
 } from '../../../utilities/graphql/transform';
 import { cloneDeep } from '../../../utilities/common/cloneDeep';
+import values from 'lodash/values';
+import isEqual from 'lodash/isEqual';
+import diff from 'jest-diff';
 
 export type ResultFunction<T> = () => T;
 
@@ -90,10 +95,23 @@ export class MockLink extends ApolloLink {
     );
 
     if (!response || typeof responseIndex === 'undefined') {
+    
+      const queryDiffs = (<string[]> []).concat(
+         ...values(this.mockedResponsesByKey).map(mockedResponses =>
+           mockedResponses.map(mockedResponse =>
+             diffRequest(mockedResponse.request, operation, this.addTypename),
+           ),
+         ),
+       );
+
+ 
+
+
       this.onError(new Error(
-        `No more mocked responses for the query: ${print(
-          operation.query
-        )}, variables: ${JSON.stringify(operation.variables)}`
+        `No more mocked responses for ${requestToString(operation)}${
+           queryDiffs.length ? `\n\nPossible matches:\n${queryDiffs.join('\n')}` : ''
+         }`, 
+
       ));
     }
 
@@ -153,6 +171,33 @@ export class MockLink extends ApolloLink {
     return newMockedResponse;
   }
 }
+
+function diffRequest(
+   actualRequest: GraphQLRequest,
+   expectedRequest: GraphQLRequest,
+   addTypename?: Boolean
+ ): string {
+   return diff(
+     requestToString(actualRequest, addTypename),
+     requestToString(expectedRequest)
+   ) || '';
+ }
+
+ function requestToString(
+   request: GraphQLRequest,
+   addTypename?: Boolean
+ ): string {
+   const query = print(
+     addTypename ? addTypenameToDocument(request.query) : request.query
+   );
+   const variables = request.variables
+     ? JSON.stringify(request.variables, null, 2)
+     : '{}';
+   const operationAST = getOperationAST(request.query, null);
+   const operationName = operationAST ? operationAST.operation : 'query';
+   return `${operationName}:\n${query}variables:\n${variables}`;
+ }
+
 
 interface MockApolloLink extends ApolloLink {
   operation?: Operation;
